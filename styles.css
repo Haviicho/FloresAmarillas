@@ -1,0 +1,1559 @@
+/* ==========================================================
+   FLORES AMARILLAS PARA JHEN - ESTILOS
+   Paleta: Color Glauco (#5B8A8C) + Amarillos Dorados + Katawaredoki
+   ========================================================== */
+
+:root {
+  /* Paleta Glauco */
+  --glauco-dark: #1b2f38;
+  --glauco-deep: #24424e;
+  --glauco-base: #5b8a8c;
+  --glauco-light: #8cb9bc;
+  --glauco-glow: rgba(91, 138, 140, 0.45);
+  --glauco-glass: rgba(27, 47, 56, 0.72);
+  --glauco-border: rgba(140, 185, 188, 0.35);
+
+  /* Paleta Flores Amarillas */
+  --yellow-light: #fff3b0;
+  --yellow-main: #ffd166;
+  --yellow-vibrant: #ffbe0b;
+  --yellow-gold: #fb8500;
+  --yellow-glow: rgba(255, 209, 102, 0.55);
+
+  /* Cielo Crepuscular / Kimi no Na wa */
+  --sky-zenith: #0c151f;
+  --sky-mid: #1d3540;
+  --sky-horizon: #4a3e4e;
+  --sky-glow: #e09f67;
+
+  /* Tipografías */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-script: 'Alex Brush', cursive, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--sky-zenith);
+  font-family: var(--font-sans);
+  color: #f4f6f8;
+  user-select: none;
+}
+
+/* ==========================================================
+   CANVAS DE ANIMACIÓN (FONDO Y FLORES)
+   ========================================================== */
+#skyCanvas, #flowerCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#skyCanvas {
+  z-index: 1;
+}
+
+#flowerCanvas {
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* ==========================================================
+   PANTALLA DE INICIO (CARTA / BIENVENIDA)
+   ========================================================== */
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: radial-gradient(circle at 50% 30%, rgba(91, 138, 140, 0.28) 0%, rgba(12, 21, 31, 0.94) 85%);
+  backdrop-filter: blur(8px);
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s;
+}
+
+.intro-overlay.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.intro-card {
+  position: relative;
+  max-width: 440px;
+  width: 100%;
+  background: var(--glauco-glass);
+  border: 1px solid var(--glauco-border);
+  border-radius: 24px;
+  padding: 40px 28px 32px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px var(--glauco-glow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+  animation: floatCard 6s ease-in-out infinite alternate;
+}
+
+@keyframes floatCard {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-8px); }
+}
+
+/* Destello del cometa estilo Kimi no Na wa */
+.intro-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(140, 185, 188, 0.12) 0%, transparent 60%);
+  pointer-events: none;
+  animation: rotateLight 14s linear infinite;
+}
+
+@keyframes rotateLight {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.stamp-glow {
+  font-size: 52px;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 16px var(--yellow-glow));
+  animation: pulseGlow 2.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 14px var(--yellow-glow)); }
+  50% { transform: scale(1.12); filter: drop-shadow(0 0 26px var(--yellow-main)); }
+}
+
+.intro-subtitle {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--yellow-main);
+  font-weight: 600;
+  margin-bottom: 10px;
+  background: rgba(255, 209, 102, 0.12);
+  padding: 4px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 209, 102, 0.25);
+}
+
+.intro-title {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.intro-title span {
+  color: var(--yellow-main);
+  font-style: italic;
+}
+
+.intro-message {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #d1e2e4;
+  margin-bottom: 28px;
+  font-weight: 300;
+}
+
+.btn-glow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--yellow-vibrant) 0%, var(--yellow-gold) 100%);
+  color: #1a2729;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px var(--yellow-glow), 0 0 20px rgba(255, 190, 11, 0.4);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.btn-glow:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 30px var(--yellow-glow), 0 0 30px rgba(255, 190, 11, 0.6);
+}
+
+.btn-glow:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.intro-hint {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--glauco-light);
+  opacity: 0.85;
+}
+
+/* Indicador automático de formato detectado (Celular / Web) */
+.device-detect-badge {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 5px 14px;
+  background: rgba(91, 138, 140, 0.24);
+  border: 1px solid rgba(140, 185, 188, 0.45);
+  border-radius: 20px;
+  font-size: 11.5px;
+  color: var(--yellow-light);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  animation: pulseDeviceBadge 3.2s ease-in-out infinite alternate;
+  user-select: none;
+  cursor: default;
+  transition: all 0.3s ease;
+}
+
+@keyframes pulseDeviceBadge {
+  0% { transform: scale(1); border-color: rgba(140, 185, 188, 0.35); }
+  100% { transform: scale(1.03); border-color: rgba(255, 209, 102, 0.6); box-shadow: 0 4px 16px rgba(255, 209, 102, 0.25); }
+}
+
+.device-detect-badge .badge-icon {
+  font-size: 13px;
+}
+
+.device-detect-badge .badge-text {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ==========================================================
+   TARJETA DE DEDICATORIA PRINCIPAL
+   ========================================================== */
+.main-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.glass-glauco {
+  background: var(--glauco-glass);
+  border: 1px solid var(--glauco-border);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 30px var(--glauco-glow);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 24px;
+}
+
+.letter-card {
+  position: relative;
+  max-width: 480px;
+  width: 100%;
+  padding: 34px 28px 26px;
+  pointer-events: auto;
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 70px;
+  border-top: 2px solid rgba(255, 209, 102, 0.45);
+}
+
+.letter-card.hidden-letter {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  pointer-events: none;
+}
+
+.close-card-btn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.close-card-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.letter-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--yellow-main);
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.letter-header h2 {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  color: #ffffff;
+  margin-bottom: 18px;
+  text-shadow: 0 0 15px rgba(255, 209, 102, 0.3);
+}
+
+.letter-body {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #e2eff0;
+  font-weight: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.letter-main-text {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #f7fafc;
+  background: rgba(91, 138, 140, 0.16);
+  padding: 16px 18px;
+  border-radius: 16px;
+  border-left: 3px solid var(--yellow-main);
+  border-top: 1px solid rgba(140, 185, 188, 0.2);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Sección Winnie the Pooh */
+.pooh-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(27, 47, 56, 0.55);
+  border: 1px solid rgba(255, 209, 102, 0.25);
+  border-radius: 18px;
+  padding: 14px 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(255, 209, 102, 0.08);
+}
+
+.pooh-img-wrapper {
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 209, 102, 0.45);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), 0 0 15px rgba(255, 209, 102, 0.35);
+  animation: gentleBreathe 4s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+@keyframes gentleBreathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), 0 0 12px rgba(255, 209, 102, 0.3); }
+  50% { transform: scale(1.04); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45), 0 0 22px rgba(255, 209, 102, 0.6); }
+}
+
+.pooh-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.disney-quote {
+  font-family: var(--font-serif);
+  font-size: 13.5px;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--yellow-light);
+  margin: 0;
+  position: relative;
+}
+
+.quote-mark {
+  color: var(--yellow-main);
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.disney-quote cite {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--glauco-light);
+  font-style: normal;
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+
+.letter-footer {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.tap-hint {
+  font-size: 11.5px;
+  color: var(--yellow-main);
+  opacity: 0.9;
+}
+
+/* ==========================================================
+   PÍLDORA DE JARDÍN FLORAL ACTIVO
+   ========================================================== */
+.active-theme-pill {
+  position: fixed;
+  bottom: 82px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  background: var(--glauco-glass);
+  border: 1px solid var(--glauco-border);
+  border-radius: 30px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 16px var(--glauco-glow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 14;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--yellow-main);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  white-space: nowrap;
+}
+
+.active-theme-pill:hover {
+  transform: translateX(-50%) translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.5), 0 0 24px var(--yellow-glow);
+}
+
+.pill-sparkle {
+  font-size: 12px;
+  animation: pulseBeat 1.8s ease-in-out infinite;
+}
+
+/* Variaciones estéticas según el tema activo */
+body.theme-carnation {
+  --glauco-glow: rgba(255, 182, 193, 0.45);
+  --yellow-main: #ffb5a7;
+  --yellow-vibrant: #ff758f;
+  --yellow-light: #ffccd5;
+  --yellow-glow: rgba(255, 181, 167, 0.55);
+  --glauco-border: rgba(255, 182, 193, 0.35);
+}
+
+body.theme-carnation .active-theme-pill {
+  border-color: rgba(255, 182, 193, 0.6);
+  color: #ffcad4;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 16px rgba(255, 182, 193, 0.4);
+}
+
+body.theme-rose {
+  --glauco-glow: rgba(251, 133, 0, 0.45);
+  --yellow-main: #ffd166;
+  --yellow-vibrant: #fb8500;
+  --yellow-light: #ffe6a7;
+  --yellow-glow: rgba(251, 133, 0, 0.55);
+  --glauco-border: rgba(255, 183, 3, 0.4);
+}
+
+body.theme-rose .active-theme-pill {
+  border-color: rgba(255, 190, 11, 0.6);
+  color: #ffd166;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 20px rgba(251, 133, 0, 0.4);
+}
+
+body.theme-orchid {
+  --glauco-glow: rgba(0, 180, 216, 0.55);
+  --yellow-main: #90e0ef;
+  --yellow-vibrant: #00b4d8;
+  --yellow-light: #caf0f8;
+  --yellow-glow: rgba(0, 180, 216, 0.6);
+  --glauco-border: rgba(72, 202, 228, 0.45);
+}
+
+body.theme-orchid .active-theme-pill {
+  border-color: rgba(72, 202, 228, 0.7);
+  color: #90e0ef;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 22px rgba(0, 180, 216, 0.5);
+}
+
+/* ==========================================================
+   BARRA DE CONTROLES INFERIOR (DOCK)
+   ========================================================== */
+.control-dock {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  padding: 8px 18px;
+  background: var(--glauco-glass);
+  border: 1px solid var(--glauco-border);
+  border-radius: 50px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px var(--glauco-glow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  pointer-events: auto;
+  z-index: 15;
+}
+
+.dock-btn {
+  background: transparent;
+  border: none;
+  color: #e2eff0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: var(--font-sans);
+  min-width: 58px;
+}
+
+.dock-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--yellow-main);
+  transform: translateY(-2px);
+}
+
+.dock-btn:active {
+  transform: scale(0.95);
+}
+
+.dock-icon {
+  font-size: 20px;
+  margin-bottom: 3px;
+}
+
+.dock-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.dock-btn.active-sound .dock-icon {
+  animation: pulseBeat 1.4s ease-in-out infinite;
+}
+
+@keyframes pulseBeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* ==========================================================
+   DESTELLO DORADO AL ABRIR EL REGALO
+   ========================================================== */
+.bloom-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 60%, rgba(255, 245, 180, 0.95) 0%, rgba(255, 209, 102, 0.75) 45%, rgba(91, 138, 140, 0.3) 80%, transparent 100%);
+  z-index: 22;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.85s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.bloom-flash.active {
+  opacity: 1;
+  transition: opacity 0.08s ease-out;
+}
+
+/* ==========================================================
+   MINIJUEGO: ATRAPA LAS FLORES CON POOH
+   ========================================================== */
+/* ==========================================================
+   REPRODUCTOR DE MÚSICA FLOTANTE (ESQUINA SUPERIOR)
+   ========================================================== */
+.floating-player {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px 8px 10px;
+  background: var(--glauco-glass);
+  border: 1px solid var(--glauco-border);
+  border-radius: 40px;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45), 0 0 20px var(--glauco-glow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  pointer-events: auto;
+  transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.floating-player.hidden-player {
+  opacity: 0;
+  transform: translateY(-20px) scale(0.95);
+  pointer-events: none;
+}
+
+.player-disc-wrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vinyl-disc {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #2d2d2d 30%, #151515 70%, #000000 100%);
+  border: 2px solid #3a3a3a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 0 4px rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.vinyl-groove {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+}
+
+.vinyl-center {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--yellow-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  box-shadow: 0 0 6px var(--yellow-glow);
+}
+
+.floating-player.is-playing .vinyl-disc {
+  animation: spinVinyl 3.6s linear infinite;
+}
+
+@keyframes spinVinyl {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 125px;
+  max-width: 170px;
+}
+
+.player-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.3px;
+}
+
+.player-subtitle {
+  font-size: 10px;
+  color: var(--yellow-main);
+  opacity: 0.9;
+  margin-top: 1px;
+}
+
+.player-wave {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 12px;
+  margin-top: 4px;
+}
+
+.p-bar {
+  width: 3px;
+  height: 4px;
+  background: var(--glauco-light);
+  border-radius: 2px;
+  transition: height 0.2s ease;
+}
+
+.floating-player.is-playing .p-bar {
+  background: var(--yellow-main);
+  animation: eqWave 0.9s ease-in-out infinite alternate;
+}
+
+.floating-player.is-playing .bar-1 { animation-delay: 0.1s; }
+.floating-player.is-playing .bar-2 { animation-delay: 0.35s; }
+.floating-player.is-playing .bar-3 { animation-delay: 0.2s; }
+.floating-player.is-playing .bar-4 { animation-delay: 0.45s; }
+
+@keyframes eqWave {
+  0% { height: 3px; }
+  100% { height: 12px; }
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.player-btn-main {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--yellow-vibrant) 0%, var(--yellow-gold) 100%);
+  color: #1a2729;
+  font-size: 13px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px var(--yellow-glow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.player-btn-main:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px var(--yellow-glow);
+}
+
+.player-btn-main:active {
+  transform: scale(0.95);
+}
+
+.player-btn-subtle {
+  background: transparent;
+  border: 1px solid rgba(140, 185, 188, 0.3);
+  color: var(--glauco-light);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.player-btn-subtle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: var(--glauco-light);
+}
+
+/* ==========================================================
+   MINIJUEGO: ATRAPA LAS FLORES CON POOH
+   ========================================================== */
+.minigame-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(12, 21, 31, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.minigame-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.game-modal-card {
+  position: relative;
+  max-width: 410px;
+  width: 100%;
+  padding: 18px 16px 16px;
+  text-align: center;
+  border-top: 2px solid var(--yellow-main);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 35px var(--glauco-glow);
+}
+
+.game-header {
+  margin-bottom: 10px;
+}
+
+.game-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--yellow-main);
+  text-transform: uppercase;
+}
+
+.game-title {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  color: #fff;
+  margin: 3px 0 8px;
+}
+
+.game-stats-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.stat-pill {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(12, 21, 31, 0.7);
+  border: 1px solid var(--glauco-border);
+  padding: 3px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-pill .stat-label {
+  color: var(--glauco-light);
+  font-size: 10.5px;
+}
+
+.stat-pill strong {
+  color: var(--yellow-main);
+}
+
+.combo-pill strong {
+  color: #ffbe0b;
+  text-shadow: 0 0 8px rgba(255, 190, 11, 0.6);
+}
+
+/* Barra de progreso al siguiente nivel */
+.level-progress-wrapper {
+  margin: 6px 0 10px;
+  padding: 0 4px;
+}
+
+.level-progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: rgba(12, 21, 31, 0.8);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(140, 185, 188, 0.25);
+}
+
+.level-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5b8a8c 0%, #ffd166 60%, #ffbe0b 100%);
+  border-radius: 10px;
+  box-shadow: 0 0 8px var(--yellow-glow);
+  transition: width 0.3s ease-out;
+}
+
+.level-progress-text {
+  font-size: 10px;
+  color: var(--yellow-light);
+  margin-top: 4px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* Repisa de Flores Coleccionables */
+.flower-shelf-container {
+  background: rgba(12, 21, 31, 0.55);
+  border: 1px solid rgba(140, 185, 188, 0.2);
+  border-radius: 14px;
+  padding: 8px 6px 6px;
+  margin-bottom: 10px;
+}
+
+.shelf-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--glauco-light);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.flower-shelf {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 4px;
+}
+
+.shelf-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  min-width: 52px;
+  transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  cursor: default;
+}
+
+.shelf-emoji {
+  font-size: 18px;
+  margin-bottom: 2px;
+  transition: transform 0.3s;
+}
+
+.shelf-name {
+  font-size: 9px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.shelf-pts {
+  font-size: 8px;
+  color: var(--glauco-light);
+}
+
+.shelf-item.locked {
+  opacity: 0.42;
+  filter: grayscale(0.85);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.shelf-item.unlocked {
+  opacity: 1;
+  filter: grayscale(0);
+  background: rgba(91, 138, 140, 0.25);
+  border: 1px solid rgba(255, 209, 102, 0.5);
+  box-shadow: 0 0 10px rgba(255, 209, 102, 0.25);
+  animation: unlockedPop 0.6s ease;
+}
+
+.shelf-item.unlocked .shelf-emoji {
+  animation: gentleBreathe 3s ease-in-out infinite;
+}
+
+.shelf-item.unlocked .shelf-name {
+  color: var(--yellow-main);
+}
+
+@keyframes unlockedPop {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.18); box-shadow: 0 0 18px var(--yellow-main); }
+  100% { transform: scale(1); }
+}
+
+/* Lienzo de juego */
+.game-canvas-container {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--glauco-border);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(180deg, #0e1a24 0%, #1c3540 70%, #2f4f4f 100%);
+}
+
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: grab;
+  touch-action: none;
+}
+
+#gameCanvas:active {
+  cursor: grabbing;
+}
+
+/* Notificación Toast en Vivo durante la partida */
+.game-toast-notice {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(27, 47, 56, 0.95);
+  border: 1px solid var(--yellow-main);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 16px var(--yellow-glow);
+  backdrop-filter: blur(10px);
+  border-radius: 30px;
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+  pointer-events: none;
+  animation: toastSlide 2.8s ease forwards;
+}
+
+.game-toast-notice.hidden {
+  display: none;
+}
+
+@keyframes toastSlide {
+  0% { opacity: 0; transform: translate(-50%, -15px) scale(0.9); }
+  15% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  85% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -15px) scale(0.9); }
+}
+
+#toastIcon {
+  font-size: 20px;
+}
+
+.toast-content {
+  text-align: left;
+}
+
+.toast-content strong {
+  display: block;
+  font-size: 11px;
+  color: var(--yellow-main);
+}
+
+.toast-content span {
+  display: block;
+  font-size: 9.5px;
+  color: #e2eff0;
+}
+
+/* Pantalla de Victoria / Gran Ramo Recompensas */
+.game-win-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(12, 21, 31, 0.9);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  transition: opacity 0.4s ease;
+}
+
+.game-win-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.win-box {
+  background: var(--glauco-glass);
+  border: 1px solid var(--yellow-main);
+  border-radius: 20px;
+  padding: 20px 16px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px var(--yellow-glow);
+  animation: floatCard 4s ease-in-out infinite alternate;
+}
+
+.win-stars {
+  font-size: 20px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.win-box h4 {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--yellow-main);
+  margin-bottom: 6px;
+}
+
+.win-box p {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #e2eff0;
+  margin-bottom: 6px;
+}
+
+.win-bouquet-showcase {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  margin: 8px 0 12px;
+}
+
+.bouquet-item {
+  font-size: 10.5px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: rgba(91, 138, 140, 0.35);
+  border: 1px solid rgba(255, 209, 102, 0.4);
+  color: var(--yellow-light);
+  font-weight: 600;
+}
+
+.win-love-quote {
+  font-size: 11.5px;
+  color: var(--yellow-light);
+  font-style: italic;
+  background: rgba(91, 138, 140, 0.2);
+  padding: 8px 10px;
+  border-radius: 12px;
+  margin: 8px 0 14px;
+  border: 1px dashed rgba(255, 209, 102, 0.35);
+}
+
+.win-btn-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-compact {
+  padding: 9px 16px;
+  font-size: 12px;
+}
+
+.btn-subtle-card {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid var(--glauco-border);
+  border-radius: 50px;
+  cursor: pointer;
+  padding: 9px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.25s;
+}
+
+.btn-subtle-card:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: var(--yellow-main);
+  color: var(--yellow-main);
+}
+
+.game-footer-hint {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--glauco-light);
+  opacity: 0.9;
+}
+
+/* ==========================================================
+   SISTEMA DE FORMATO AUTOMÁTICO: CELULAR vs WEB / ESCRITORIO
+   ========================================================== */
+
+/* --- 1. FORMATO CELULAR (Mobile Phone Format) --- */
+/* Se activa automáticamente al detectar móvil o pantalla vertical/táctil */
+@media (max-width: 768px), (pointer: coarse) and (max-width: 1024px) {
+  html, body {
+    height: 100%;
+    min-height: 100dvh;
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
+  }
+
+  .main-container {
+    padding: max(10px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  }
+
+  /* Tarjeta inicial de apertura en celular */
+  .intro-card {
+    width: min(92vw, 380px);
+    padding: 28px 18px 20px;
+    border-radius: 22px;
+  }
+
+  .stamp-glow {
+    font-size: 44px;
+    margin-bottom: 8px;
+  }
+
+  .intro-title {
+    font-size: 26px;
+    margin-bottom: 12px;
+  }
+
+  .intro-message {
+    font-size: 13px;
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+
+  .btn-glow {
+    width: 100%;
+    min-height: 50px;
+    padding: 13px 20px;
+    font-size: 14px;
+    border-radius: 40px;
+    touch-action: manipulation;
+  }
+
+  .btn-glow:active {
+    transform: scale(0.96);
+  }
+
+  /* Tarjeta de dedicatoria en celular: centrada, estilizada y con scroll táctil suave */
+  .letter-card {
+    width: min(93vw, 420px);
+    max-height: calc(100dvh - 150px);
+    padding: 22px 16px 16px;
+    margin-bottom: 74px;
+    border-radius: 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .letter-card::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .letter-card::-webkit-scrollbar-thumb {
+    background: rgba(255, 209, 102, 0.4);
+    border-radius: 4px;
+  }
+
+  .close-card-btn {
+    top: 10px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    font-size: 22px;
+    touch-action: manipulation;
+  }
+
+  .letter-header h2 {
+    font-size: 21px;
+  }
+
+  .letter-badge {
+    font-size: 9.5px;
+    padding: 3px 10px;
+  }
+
+  .letter-main-text {
+    font-size: 13.5px;
+    line-height: 1.6;
+    padding: 12px 14px;
+    border-radius: 14px;
+  }
+
+  /* Sección Winnie the Pooh en pantalla vertical de celular */
+  .pooh-section {
+    padding: 10px 12px;
+    gap: 12px;
+    border-radius: 16px;
+  }
+
+  .pooh-img-wrapper {
+    width: 74px;
+    height: 74px;
+    border-radius: 14px;
+  }
+
+  .disney-quote {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .disney-quote cite {
+    font-size: 10px;
+    margin-top: 4px;
+  }
+
+  .tap-hint {
+    font-size: 10.5px;
+  }
+
+  /* Reproductor flotante adaptado a la barra superior del celular (soporte notch) */
+  .floating-player {
+    top: max(10px, env(safe-area-inset-top));
+    right: max(10px, env(safe-area-inset-right));
+    padding: 5px 10px 5px 6px;
+    gap: 7px;
+    border-radius: 30px;
+  }
+
+  .player-disc-wrap {
+    width: 34px;
+    height: 34px;
+  }
+
+  .vinyl-disc {
+    width: 32px;
+    height: 32px;
+  }
+
+  .vinyl-groove {
+    width: 20px;
+    height: 20px;
+  }
+
+  .vinyl-center {
+    width: 13px;
+    height: 13px;
+    font-size: 8.5px;
+  }
+
+  .player-info {
+    min-width: 75px;
+    max-width: 110px;
+  }
+
+  .player-title {
+    font-size: 10.5px;
+  }
+
+  .player-subtitle {
+    font-size: 8.5px;
+  }
+
+  .player-wave {
+    height: 10px;
+    gap: 2px;
+  }
+
+  .p-bar {
+    width: 2px;
+  }
+
+  .player-btn-main {
+    width: 27px;
+    height: 27px;
+    font-size: 10.5px;
+  }
+
+  .player-btn-subtle {
+    width: 23px;
+    height: 23px;
+    font-size: 9.5px;
+  }
+
+  /* Píldora del Jardín Floral Activo */
+  .active-theme-pill {
+    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 58px);
+    font-size: 10.5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    touch-action: manipulation;
+  }
+
+  /* Barra de controles inferior (Dock táctil ergonómico) */
+  .control-dock {
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: min(95vw, 420px);
+    padding: 5px 6px;
+    gap: 2px;
+    justify-content: space-around;
+    border-radius: 40px;
+  }
+
+  .dock-btn {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 5px 4px;
+    border-radius: 16px;
+    touch-action: manipulation;
+  }
+
+  .dock-btn:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .dock-icon {
+    font-size: 18px;
+    margin-bottom: 1px;
+  }
+
+  .dock-label {
+    font-size: 8px;
+    font-weight: 600;
+  }
+
+  /* Modal del Minijuego en Celular */
+  .game-modal-card {
+    width: min(95vw, 360px);
+    max-height: calc(100dvh - 20px);
+    padding: 12px 10px 10px;
+    border-radius: 20px;
+    overflow-y: auto;
+  }
+
+  .game-title {
+    font-size: 15px;
+  }
+
+  .stat-pill {
+    padding: 3px 7px;
+    font-size: 9.5px;
+  }
+
+  .level-progress-text {
+    font-size: 9px;
+  }
+
+  .shelf-title {
+    font-size: 9.5px;
+  }
+
+  .shelf-item {
+    min-width: 44px;
+    padding: 3px 3px;
+    border-radius: 10px;
+    touch-action: manipulation;
+  }
+
+  .shelf-emoji {
+    font-size: 14px;
+  }
+
+  .shelf-name {
+    font-size: 7.5px;
+  }
+
+  .shelf-pts {
+    font-size: 7px;
+  }
+
+  .game-canvas-container canvas {
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    aspect-ratio: 340 / 370;
+    touch-action: none;
+  }
+
+  .game-footer-hint {
+    font-size: 9.5px;
+  }
+}
+
+/* --- 2. FORMATO ESCRITORIO / WEB (Desktop Web Format) --- */
+@media (min-width: 769px) and (pointer: fine) {
+  html, body {
+    height: 100%;
+  }
+
+  .intro-card {
+    max-width: 450px;
+    padding: 42px 32px 34px;
+  }
+
+  .letter-card {
+    max-width: 520px;
+    padding: 36px 30px 28px;
+    margin-bottom: 74px;
+  }
+
+  .pooh-section {
+    gap: 18px;
+    padding: 14px 20px;
+  }
+
+  .pooh-img-wrapper {
+    width: 96px;
+    height: 96px;
+  }
+
+  .floating-player {
+    top: 20px;
+    right: 20px;
+    padding: 8px 18px 8px 12px;
+  }
+
+  .control-dock {
+    bottom: 22px;
+    padding: 8px 22px;
+    gap: 12px;
+  }
+
+  .dock-btn {
+    min-width: 60px;
+    padding: 8px 14px;
+  }
+
+  .active-theme-pill {
+    bottom: 84px;
+  }
+
+  .game-modal-card {
+    max-width: 380px;
+    padding: 20px 18px 16px;
+  }
+}
+
+/* Soporte dinámico para clases de dispositivo aplicadas por JavaScript */
+body.is-mobile .intro-hint {
+  font-size: 11px;
+}
+
+body.is-desktop .dock-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--yellow-main);
+  transform: translateY(-2px);
+}

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0c151f">
+  <title>Flores Amarillas para Jhen 🌻✨</title>
+  <meta name="description" content="Un detalle especial para este 21 de septiembre, con flores amarillas, estrellas y la magia de Kimi no Na wa.">
+  <meta property="og:title" content="Flores Amarillas para Jhen 🌻💛">
+  <meta property="og:description" content="Toca la pantalla para abrir tu regalo del 21 de septiembre.">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌻</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Lienzos de animación -->
+  <canvas id="skyCanvas"></canvas>
+  <canvas id="flowerCanvas"></canvas>
+  <div id="bloomFlash" class="bloom-flash"></div>
+
+  <!-- PANTALLA INICIAL: La Carta / Sobre Estelar -->
+  <div id="introScreen" class="intro-overlay">
+    <div class="intro-card">
+      <div class="comet-preview"></div>
+      <div class="stamp-glow">🌻</div>
+      <span class="intro-subtitle">21 DE SEPTIEMBRE</span>
+      <h1 class="intro-title">Para <span id="introRecipient">Jhen</span></h1>
+      <p class="intro-message">
+        Alguien preparó un detalle especial que florece bajo las estrellas para ti... ✨
+      </p>
+      <button id="openButton" class="btn-glow">
+        <span class="btn-sparkle">✨</span>
+        <span class="btn-text">Toca para abrir tu regalo</span>
+        <span class="btn-sparkle">🌻</span>
+      </button>
+
+      <!-- Indicador automático de formato detectado (Web / Celular) -->
+      <div id="deviceBadge" class="device-detect-badge" title="Formato adaptado automáticamente a tu dispositivo">
+        <span id="deviceBadgeIcon" class="badge-icon">📱</span>
+        <span id="deviceBadgeText" class="badge-text">Detectando dispositivo...</span>
+      </div>
+
+      <p class="intro-hint">🎧 Se recomienda usar auriculares con sonido</p>
+    </div>
+  </div>
+
+  <!-- PANTALLA PRINCIPAL: Tarjeta de Dedicatoria y Controles -->
+  <div id="mainExperience" class="main-container hidden">
+
+    <!-- Tarjeta de dedicatoria -->
+    <div id="letterCard" class="letter-card glass-glauco hidden-letter">
+      <button id="closeLetterBtn" class="close-card-btn" title="Minimizar carta">×</button>
+      <div class="letter-header">
+        <span class="letter-badge">21 de Septiembre 💛</span>
+        <h2 id="cardRecipient">Para Jhen 🌻</h2>
+      </div>
+      <div class="letter-body">
+        <p class="letter-main-text">
+          Hoy es 21 de Setiembre, y lo siento por no poder darte flores amarillas reales, y que la distancia se haya vuelto un ladron, no nos quita el sentimiento, pero si nos roba los abrazos cotidianos y los momentos compartidos, te amo mucho mi corazon de ciruela, espero que esta web te haya gustado.
+        </p>
+
+        <!-- Sección Winnie the Pooh -->
+        <div class="pooh-section">
+          <div class="pooh-img-wrapper">
+            <img src="assets/pooh.jpg" alt="Winnie the Pooh con flores" class="pooh-img">
+          </div>
+          <blockquote class="disney-quote">
+            <span class="quote-mark">“</span>Si tú vas a vivir cien años, yo quiero vivir cien años menos un día, porque no quiero pasar un día sin ti<span class="quote-mark">”</span>.
+            <cite>— Winnie the Pooh</cite>
+          </blockquote>
+        </div>
+      </div>
+      <div class="letter-footer">
+        <span class="tap-hint">💡 Toca la pantalla para hacer brotar más girasoles amarillos ✨</span>
+      </div>
+    </div>
+
+    <!-- Indicador del Jardín Floral Activo en la Web -->
+    <div id="activeThemePill" class="active-theme-pill" title="Jardín Activo (Toca para cambiar entre jardines desbloqueados)">
+      <span class="pill-sparkle">✨</span>
+      <span id="activeThemeName">Jardín: Girasoles 🌻</span>
+    </div>
+
+    <!-- Barra de controles interactivos -->
+    <div class="control-dock">
+      <button id="audioToggleBtn" class="dock-btn active-sound" title="Pausar / Reproducir">
+        <span class="dock-icon" id="musicIcon">🎵</span>
+        <span class="dock-label">Música</span>
+      </button>
+
+      <button id="showerBtn" class="dock-btn" title="Lluvia de flores y pétalos">
+        <span class="dock-icon">🍂</span>
+        <span class="dock-label">Lluvia</span>
+      </button>
+
+      <button id="bloomMoreBtn" class="dock-btn" title="Brotar más girasoles">
+        <span class="dock-icon">🌻</span>
+        <span class="dock-label">Girasoles</span>
+      </button>
+
+      <button id="showLetterBtn" class="dock-btn" title="Leer la carta">
+        <span class="dock-icon">💌</span>
+        <span class="dock-label">Carta</span>
+      </button>
+
+      <button id="minigameBtn" class="dock-btn" title="Jugar minijuego de flores amarillas">
+        <span class="dock-icon">🎮</span>
+        <span class="dock-label">Juego</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- REPRODUCTOR DE MÚSICA FLOTANTE (Esquina Superior) -->
+  <div id="floatingMusicPlayer" class="floating-player glass-glauco hidden-player">
+    <div class="player-disc-wrap">
+      <div id="playerVinyl" class="vinyl-disc">
+        <div class="vinyl-groove"></div>
+        <div class="vinyl-center">🌻</div>
+      </div>
+    </div>
+    <div class="player-info">
+      <div class="player-title" title="Kimi no Na wa - Para Jhen">Kimi no Na wa ✨</div>
+      <div class="player-subtitle">Flores para Jhen 💛</div>
+      <div class="player-wave" id="playerWave">
+        <span class="p-bar bar-1"></span>
+        <span class="p-bar bar-2"></span>
+        <span class="p-bar bar-3"></span>
+        <span class="p-bar bar-4"></span>
+      </div>
+    </div>
+    <div class="player-controls">
+      <button id="topPlayerPlayBtn" class="player-btn-main" title="Reproducir / Pausar">
+        <span id="playerPlayIcon">▶</span>
+      </button>
+      <button id="topPlayerMuteBtn" class="player-btn-subtle" title="Silenciar / Sonido">
+        <span id="playerMuteIcon">🔊</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL DEL MINIJUEGO CON SISTEMA DE NIVELES Y RECOMPENSAS -->
+  <div id="minigameModal" class="minigame-overlay hidden">
+    <div class="game-modal-card glass-glauco">
+      <button id="closeGameBtn" class="close-card-btn" title="Cerrar juego">×</button>
+      
+      <div class="game-header">
+        <span class="game-badge">🌻 MINIJUEGO PARA JHEN 💛</span>
+        <h3 class="game-title">Atrapa las Flores con Pooh</h3>
+        
+        <!-- Barra de estadísticas -->
+        <div class="game-stats-bar">
+          <div class="stat-pill"><span class="stat-label">Nivel</span> <strong id="gameLevel">1</strong></div>
+          <div class="stat-pill"><span class="stat-label">Puntos:</span> <strong id="gameScore">0</strong></div>
+          <div class="stat-pill combo-pill"><span class="stat-label">Combo:</span> <strong id="gameCombo">x1.0</strong></div>
+          <div class="stat-pill"><span class="stat-label">Ciruelas:</span> <strong id="plumScore">0</strong> 💜</div>
+        </div>
+
+        <!-- Barra de progreso al siguiente nivel -->
+        <div class="level-progress-wrapper">
+          <div class="level-progress-bar-bg">
+            <div id="levelProgressBar" class="level-progress-bar-fill" style="width: 0%;"></div>
+          </div>
+          <div id="levelProgressText" class="level-progress-text">Meta: 500 pts para transformar toda la web a Claveles 🌸</div>
+        </div>
+
+        <!-- Repisa de Transformación Floral de Toda la Web para Jhen -->
+        <div class="flower-shelf-container">
+          <div class="shelf-title">Transformación Floral de Toda la Web:</div>
+          <div class="flower-shelf" id="flowerShelf">
+            <div class="shelf-item unlocked" id="badgeSunflower" title="Girasoles (Jardín inicial en pantalla)">
+              <span class="shelf-emoji">🌻</span>
+              <span class="shelf-name">Girasoles</span>
+              <span class="shelf-pts">0 pts</span>
+            </div>
+            <div class="shelf-item locked" id="badgeCarnation" title="Claveles (A los 500 pts toda la web florece en claveles)">
+              <span class="shelf-emoji">🌸</span>
+              <span class="shelf-name">Claveles</span>
+              <span class="shelf-pts">500 pts</span>
+            </div>
+            <div class="shelf-item locked" id="badgeRose" title="Rosas (A los 1500 pts toda la web florece en rosas)">
+              <span class="shelf-emoji">🌹</span>
+              <span class="shelf-name">Rosas</span>
+              <span class="shelf-pts">1500 pts</span>
+            </div>
+            <div class="shelf-item locked" id="badgeOrchid" title="Orquídeas Azules (A los 2000 pts toda la web florece en orquídeas azules)">
+              <span class="shelf-emoji">💙</span>
+              <span class="shelf-name">Orquídeas</span>
+              <span class="shelf-pts">2000 pts</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lienzo del juego con notificaciones dinámicas -->
+      <div class="game-canvas-container">
+        <canvas id="gameCanvas" width="340" height="370"></canvas>
+        
+        <!-- Notificación Toast de Desbloqueo en Vivo -->
+        <div id="gameToast" class="game-toast-notice hidden">
+          <span id="toastIcon">🌸</span>
+          <div class="toast-content">
+            <strong id="toastTitle">¡Toda la web transformada!</strong>
+            <span id="toastDesc">Ahora florecen Claveles para Jhen</span>
+          </div>
+        </div>
+
+        <!-- Pantalla de Victoria / Gran Ramo Recompensas -->
+        <div id="gameWinScreen" class="game-win-overlay hidden">
+          <div class="win-box">
+            <span class="win-stars">💙 🌹 🌸 🌻 👑 ✨</span>
+            <h4>¡Jardín Místico de Orquídeas Azules!</h4>
+            <p>
+              ¡Has desbloqueado todas las transformaciones florales para tu <strong>corazón de ciruela</strong>!
+            </p>
+            <div class="win-bouquet-showcase">
+              <span class="bouquet-item">🌻 Girasoles</span>
+              <span class="bouquet-item">🌸 Claveles</span>
+              <span class="bouquet-item">🌹 Rosas</span>
+              <span class="bouquet-item">💙 Orquídeas Azules</span>
+            </div>
+            <p class="win-love-quote">
+              <em>«Si tú vas a vivir cien años, yo quiero vivir cien años menos un día, porque no quiero pasar un día sin ti».</em>
+            </p>
+            <div class="win-btn-row">
+              <button id="continueGameBtn" class="btn-glow btn-compact">🚀 Seguir jugando (Modo Infinito)</button>
+              <button id="restartGameBtn" class="btn-subtle-card btn-compact">🌻 Reiniciar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <p class="game-footer-hint">👆 Desliza el dedo o el ratón para mover a Winnie the Pooh y atrapar flores</p>
+    </div>
+  </div>
+
+  <!-- Audio de fondo para la canción en MP3 -->
+  <audio id="bgAudio" src="assets/musica.mp3" loop preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
