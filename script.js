@@ -180,6 +180,10 @@
 
   // --- 2. SISTEMA DE AUDIO (MP3 + FALLBACK AMBIENTAL ESTILO YOUR NAME) ---
   const bgAudio = document.getElementById('bgAudio');
+  if (bgAudio) {
+    bgAudio.src = 'musica.mp3?v=sparkle_v3';
+    bgAudio.load();
+  }
   let isMuted = false;
   let isAudioPlaying = false;
   let synthAudioCtx = null;
@@ -312,13 +316,19 @@
     }
   }
 
-  // Si hay error al cargar musica.mp3, no bloquear: usar la melodía ambiental
+  // Si hay error al cargar musica.mp3, probar ruta alternativa o melodía ambiental
   if (bgAudio) {
     bgAudio.addEventListener('error', () => {
-      console.log('Archivo assets/musica.mp3 pendiente. Activando melodía ambiental de estrellas ✨');
-      if (!isMuted && isExperienceActive) {
-        startAmbientChimes();
-        updateAudioUI(true);
+      if (!bgAudio.src.includes('assets/')) {
+        bgAudio.src = 'assets/musica.mp3?v=sparkle_v3';
+        bgAudio.load();
+        if (isAudioPlaying) bgAudio.play().catch(() => startAmbientChimes());
+      } else {
+        console.log('Música física no disponible en este momento. Activando melodía ambiental ✨');
+        if (!isMuted && isExperienceActive) {
+          startAmbientChimes();
+          updateAudioUI(true);
+        }
       }
     });
     bgAudio.addEventListener('ended', () => {
@@ -2582,7 +2592,7 @@
     },
     badgeOrchid: {
       theme: 'orchid',
-      note: '💙 Orquídea Azul: "Un amor único, eterno e irrepetible en el universo, dedicado a ti, mi corazón de ciruela."',
+      note: '💙 Orquídea Azul: "Un amor único, eterno e irrepetible en el universo, dedicado a ti, mi lunita."',
       ptsNeeded: '2000 pts'
     }
   };
