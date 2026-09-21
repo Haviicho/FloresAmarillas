@@ -375,9 +375,13 @@
     comet.length = Math.random() * 80 + 130;
   }
 
-  function drawSky(time) {
-    // Fondo degradado Katawaredoki y Glauco adaptado a la especie floral activa
-    const grad = skyCtx.createLinearGradient(0, 0, 0, height);
+  function drawSky(time, skyOffset = 0) {
+    skyCtx.save();
+    skyCtx.translate(0, -skyOffset);
+
+    // Fondo degradado Katawaredoki y Glauco adaptado a la especie floral activa (extendido para parallax)
+    const extraH = 500;
+    const grad = skyCtx.createLinearGradient(0, -100, 0, height + extraH);
     if (currentFlowerTheme === 'orchid') {
       grad.addColorStop(0, '#030712');        // Noche zafiro ultra profunda
       grad.addColorStop(0.35, '#07182c');     // Glauco azul marino noche
@@ -405,7 +409,7 @@
       grad.addColorStop(1, '#a87556');        // Horizonte cálido de atardecer
     }
     skyCtx.fillStyle = grad;
-    skyCtx.fillRect(0, 0, width, height);
+    skyCtx.fillRect(0, -100, width, height + extraH + 100);
 
     // Resplandor atmosférico en la zona media según el tema
     const radialGlauco = skyCtx.createRadialGradient(width * 0.5, height * 0.45, 20, width * 0.5, height * 0.45, width * 0.8);
@@ -423,7 +427,7 @@
       radialGlauco.addColorStop(1, 'rgba(91, 138, 140, 0)');
     }
     skyCtx.fillStyle = radialGlauco;
-    skyCtx.fillRect(0, 0, width, height);
+    skyCtx.fillRect(0, -100, width, height + extraH + 100);
 
     // Dibujar estrellas
     for (let i = 0; i < stars.length; i++) {
@@ -457,19 +461,23 @@
       skyCtx.lineTo(tailX, tailY);
       skyCtx.stroke();
 
-      // Cabeza brillante
-      skyCtx.fillStyle = `rgba(255, 255, 255, ${comet.opacity})`;
+      // Núcleo brillante del cometa
+      skyCtx.fillStyle = '#ffffff';
+      skyCtx.shadowColor = 'rgba(255, 240, 180, 0.9)';
+      skyCtx.shadowBlur = 12;
       skyCtx.beginPath();
       skyCtx.arc(comet.x, comet.y, 2.5, 0, Math.PI * 2);
       skyCtx.fill();
       skyCtx.restore();
 
+      // Mover cometa
       comet.x += comet.vx;
       comet.y += comet.vy;
       comet.opacity -= 0.007;
-      if (comet.opacity <= 0 || comet.x > width || comet.y > height) {
+
+      if (comet.x > width + 100 || comet.y > height + 100 || comet.opacity <= 0) {
         comet.active = false;
-        comet.timer = Math.floor(Math.random() * 200 + 150);
+        comet.timer = Math.floor(Math.random() * 200 + 150); // Próximo cometa
       }
     } else {
       comet.timer--;
@@ -477,6 +485,8 @@
         spawnComet();
       }
     }
+
+    skyCtx.restore();
   }
 
   // --- 4. SISTEMA DE FLORES Y JARDÍN MULTI-ESPECIE (GIRASOLES, CLAVELES, ROSAS, ORQUÍDEAS) ---
@@ -496,7 +506,7 @@
   class Flower {
     constructor(baseX, targetY, scale = 1, delay = 0) {
       this.baseX = baseX;
-      this.baseY = height + 20;
+      this.baseY = height + 280;
       this.targetX = baseX + (Math.random() * 46 - 23);
       this.targetY = targetY;
       this.scale = scale;
@@ -1558,18 +1568,138 @@
     petals.push(new Petal());
   }
 
-  // --- 5. BUCLE PRINCIPAL DE ANIMACIÓN (60 FPS) ---
+  // --- 5. CONTROLADOR DEL EFECTO PARALLAX CINEMATOGRÁFICO ---
+  // Profundidad inmersiva: el cielo estrellado y el cometa se mueven lento, mientras el campo floral de primer plano responde con mayor dinamismo.
+  let targetParallaxY = 0;
+  let smoothParallaxY = 0;
+  let touchStartY = null;
+
+  // Gestos táctiles en celular (deslizar la pantalla hacia arriba o abajo)
+  window.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches[0]) {
+      touchStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (touchStartY !== null && e.touches && e.touches[0]) {
+      const dy = touchStartY - e.touches[0].clientY;
+      targetParallaxY = Math.max(-140, Math.min(140, dy * 0.75));
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => {
+    touchStartY = null;
+    targetParallaxY = 0; // Suave retorno elástico a la posición de reposo
+  }, { passive: true });
+
+  // Rueda del ratón en PC
+  let wheelTimeout = null;
+  window.addEventListener('wheel', (e) => {
+    targetParallaxY = Math.max(-120, Math.min(120, targetParallaxY + e.deltaY * 0.25));
+    if (wheelTimeout) clearTimeout(wheelTimeout);
+    wheelTimeout = setTimeout(() => {
+      targetParallaxY = 0;
+    }, 550);
+  }, { passive: true });
+
+  // Movimiento sutil con el cursor en PC
+  window.addEventListener('mousemove', (e) => {
+    if (typeof DeviceDetector !== 'undefined' && DeviceDetector.isMobile) return;
+    const normalizedY = (e.clientY / window.innerHeight) - 0.5;
+    targetParallaxY = normalizedY * 70;
+  }, { passive: true });
+
+  // --- EFECTO DE ESCRITURA EN TIEMPO REAL (Estilo Kimi no Na wa) ---
+  const fullDedicationText = "Hoy es 21 de Septiembre, y perdón por no poder darte flores amarillas corazón, pero te voy a recompensar después, a veces no nos podemos ver, la distancia se volvió un ladrón para nosotros, robándonos abrazos cotidianos y momentos compartidos, pero lo que sentimos jamás se lo llevará, espero te guste esta página, te amo mucho mi lunita.";
+
+  let typewriterTimeout = null;
+  let isTypingDedication = false;
+
+  function startTypewriterEffect(callback) {
+    const typedContent = document.getElementById('typedContent');
+    const diaryCursor = document.getElementById('diaryCursor');
+    const letterMainText = document.getElementById('letterMainText');
+    if (!typedContent) return;
+
+    if (typewriterTimeout) {
+      clearTimeout(typewriterTimeout);
+      typewriterTimeout = null;
+    }
+
+    typedContent.textContent = '';
+    if (diaryCursor) {
+      diaryCursor.classList.remove('cursor-fade-out');
+      diaryCursor.style.display = 'inline-block';
+    }
+
+    isTypingDedication = true;
+    let charIndex = 0;
+
+    function typeNextLetter() {
+      if (charIndex < fullDedicationText.length) {
+        const char = fullDedicationText[charIndex];
+        typedContent.textContent += char;
+        charIndex++;
+
+        // Ritmo humano: pausas emotivas en comas y puntos
+        let delay = 34 + Math.random() * 18;
+        if (char === ',') delay = 210;
+        else if (char === '.') delay = 380;
+        else if (char === ' ') delay = 48;
+
+        typewriterTimeout = setTimeout(typeNextLetter, delay);
+      } else {
+        isTypingDedication = false;
+        if (diaryCursor) {
+          diaryCursor.classList.add('cursor-fade-out');
+        }
+        if (callback) callback();
+      }
+    }
+
+    // Permitir saltar la animación al tocar el texto
+    if (letterMainText) {
+      letterMainText.onclick = () => {
+        if (isTypingDedication) {
+          clearTimeout(typewriterTimeout);
+          typedContent.textContent = fullDedicationText;
+          isTypingDedication = false;
+          if (diaryCursor) diaryCursor.classList.add('cursor-fade-out');
+        }
+      };
+    }
+
+    typeNextLetter();
+  }
+
+  const replayLetterBtn = document.getElementById('replayLetterBtn');
+  if (replayLetterBtn) {
+    replayLetterBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      startTypewriterEffect();
+    });
+  }
+
   let lastTime = 0;
   function animate(timestamp) {
     const time = timestamp * 0.001;
 
-    // 1. Dibujar cielo y estrellas
-    drawSky(time);
+    // Suave amortiguación lerp para el efecto Parallax
+    smoothParallaxY += (targetParallaxY - smoothParallaxY) * 0.09;
+    const skyOffset = smoothParallaxY * 0.15;       // Parallax cósmico: cielo y cometa se mueven lento
+    const flowerOffset = smoothParallaxY * 0.65;    // Parallax botánico: flores se mueven en primer plano
+
+    // 1. Dibujar cielo y estrellas con parallax
+    drawSky(time, skyOffset);
 
     // 2. Limpiar canvas de flores
     flowerCtx.clearRect(0, 0, width, height);
 
-    // 3. Dibujar y actualizar flores
+    // 3. Dibujar y actualizar flores con parallax
+    flowerCtx.save();
+    flowerCtx.translate(0, -flowerOffset);
+
     if (isExperienceActive) {
       for (let i = 0; i < flowers.length; i++) {
         flowers[i].update();
@@ -1602,6 +1732,8 @@
         skyburstFlowers.splice(i, 1);
       }
     }
+
+    flowerCtx.restore();
 
     requestAnimationFrame(animate);
   }
@@ -1636,7 +1768,7 @@
       sparkParticles.push(new SparkParticle(width * 0.5, height * 0.75));
     }
 
-    // Iniciar música de fondo (MP3 o arpegios celestiales si el MP3 aún no está puesto)
+    // Iniciar música de fondo
     playBackgroundMusic();
 
     // Transición de salida de la pantalla de bienvenida
@@ -1648,9 +1780,10 @@
     // Mostrar contenedor principal
     mainExperience.classList.remove('hidden');
 
-    // Mostrar carta de dedicatoria después de que broten las flores
+    // Mostrar carta de dedicatoria después de que broten las flores e iniciar efecto mecanografía en tiempo real
     setTimeout(() => {
       letterCard.classList.remove('hidden-letter');
+      startTypewriterEffect();
     }, 1800);
 
     // Toast confirmando el formato detectado automáticamente
@@ -1666,25 +1799,47 @@
     triggerPetalShower(25);
   });
 
-  // Tocar o hacer clic en la pantalla para hacer brotar flores y chispas (SIN SONIDO)
-  flowerCanvas.addEventListener('pointerdown', (e) => {
+  // Función unificada para hacer brotar flores con compensación de Parallax
+  function sproutInteractiveFlowerAt(clientX, clientY) {
     const rect = flowerCanvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = clientX - rect.left;
+    const currentParallaxOffset = (typeof smoothParallaxY !== 'undefined') ? (smoothParallaxY * 0.65) : 0;
+    const y = clientY - rect.top + currentParallaxOffset;
 
     // Añadir chispas luminosas visuales
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 16; i++) {
       sparkParticles.push(new SparkParticle(x, y));
     }
 
     // Si la experiencia ya está activa, brotar una nueva flor interactiva de la especie actual
     if (isExperienceActive) {
-      const scale = DeviceDetector.isMobile ? (0.54 + Math.random() * 0.22) : (0.7 + Math.random() * 0.32);
+      const isMobileDevice = (typeof DeviceDetector !== 'undefined' && DeviceDetector.isMobile);
+      const scale = isMobileDevice ? (0.55 + Math.random() * 0.22) : (0.72 + Math.random() * 0.32);
       const newFlower = new Flower(x, y, scale, 0);
       newFlower.flowerType = currentFlowerTheme;
-      newFlower.stemProgress = 0.4; // Comienza a crecer desde el punto tocado
+      newFlower.stemProgress = 0.45; // Comienza a brotar ágilmente desde el punto tocado
       flowers.push(newFlower);
     }
+  }
+
+  // Tocar o hacer clic en cualquier área libre de la pantalla para hacer brotar flores y chispas
+  window.addEventListener('pointerdown', (e) => {
+    if (!isExperienceActive) return;
+
+    // Si el clic ocurre en una tarjeta, dock, botón, reproductor flotante o modales, no brotar flor
+    if (e.target && e.target.closest && (
+      e.target.closest('.letter-card') ||
+      e.target.closest('.control-dock') ||
+      e.target.closest('.floating-player') ||
+      e.target.closest('.active-theme-pill') ||
+      e.target.closest('.game-modal') ||
+      e.target.closest('.game-toast-notice') ||
+      e.target.closest('button')
+    )) {
+      return;
+    }
+
+    sproutInteractiveFlowerAt(e.clientX, e.clientY);
   });
 
   // Función para lluvia intensa de flores y pétalos
@@ -1715,6 +1870,13 @@
   if (showLetterBtn) {
     showLetterBtn.addEventListener('click', () => {
       letterCard.classList.toggle('hidden-letter');
+      if (!letterCard.classList.contains('hidden-letter')) {
+        const typedContent = document.getElementById('typedContent');
+        if (typedContent && !typedContent.textContent) {
+          startTypewriterEffect();
+        }
+        letterCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     });
   }
 

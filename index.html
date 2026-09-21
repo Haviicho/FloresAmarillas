@@ -57,16 +57,19 @@
   <!-- PANTALLA PRINCIPAL: Tarjeta de Dedicatoria y Controles -->
   <div id="mainExperience" class="main-container hidden">
 
-    <!-- Tarjeta de dedicatoria -->
+    <!-- Tarjeta principal de dedicatoria con escritura en tiempo real -->
     <div id="letterCard" class="letter-card glass-glauco hidden-letter">
       <button id="closeLetterBtn" class="close-card-btn" title="Minimizar carta">×</button>
       <div class="letter-header">
-        <span class="letter-badge">21 de Septiembre 💛</span>
-        <h2 id="cardRecipient">Para Jhen 🌻</h2>
+        <div class="header-titles">
+          <span class="letter-badge">21 de Septiembre 💛</span>
+          <h2 id="cardRecipient">Para Jhen 🌻</h2>
+        </div>
+        <button id="replayLetterBtn" class="replay-letter-btn" title="Volver a escribir la carta en tiempo real">✍️</button>
       </div>
       <div class="letter-body">
-        <p class="letter-main-text">
-          Hoy es 21 de Septiembre, y perdón por no poder darte flores amarillas corazón, pero te voy a recompensar después, a veces no nos podemos ver, la distancia se volvió un ladrón para nosotros, robándonos abrazos cotidianos y momentos compartidos, pero lo que sentimos jamás se lo llevará, espero te guste esta página, te amo mucho mi lunita.
+        <p id="letterMainText" class="letter-main-text" title="Toca la carta para completar el texto de inmediato">
+          <span id="typedContent"></span><span id="diaryCursor" class="diary-cursor">|</span>
         </p>
 
         <!-- Sección Winnie the Pooh -->
@@ -81,14 +84,15 @@
         </div>
       </div>
       <div class="letter-footer">
-        <span class="tap-hint">💡 Toca la pantalla para hacer brotar más girasoles amarillos ✨</span>
+        <span class="tap-hint">💡 Toca la pantalla para hacer brotar más flores amarillas ✨</span>
       </div>
     </div>
 
-    <!-- Indicador del Jardín Floral Activo en la Web -->
-    <div id="activeThemePill" class="active-theme-pill" title="Jardín Activo (Toca para cambiar entre jardines desbloqueados)">
+    <!-- Selector e Indicador del Jardín Floral Activo (Ubicación visible) -->
+    <div id="activeThemePill" class="active-theme-pill" title="Toca aquí para alternar entre tus jardines desbloqueados (Girasoles, Claveles, Rosas, Orquídeas)">
       <span class="pill-sparkle">✨</span>
       <span id="activeThemeName">Jardín: Girasoles 🌻</span>
+      <span class="pill-switch-hint">⇄</span>
     </div>
 
     <!-- Barra de controles interactivos -->
