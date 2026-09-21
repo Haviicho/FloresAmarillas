@@ -1859,6 +1859,29 @@
       else activeThemeName.textContent = 'Jardín: Girasoles 🌻';
     }
 
+    // 2.1 Actualizar Botón del Dock Inferior (Icono y Texto dinámico)
+    const bloomBtnIcon = document.getElementById('bloomBtnIcon');
+    const bloomBtnLabel = document.getElementById('bloomBtnLabel');
+    if (bloomBtnIcon && bloomBtnLabel) {
+      if (newTheme === 'orchid') {
+        bloomBtnIcon.textContent = '💙';
+        bloomBtnLabel.textContent = 'Orquídeas';
+      } else if (newTheme === 'rose') {
+        bloomBtnIcon.textContent = '🌹';
+        bloomBtnLabel.textContent = 'Rosas';
+      } else if (newTheme === 'carnation') {
+        bloomBtnIcon.textContent = '🌸';
+        bloomBtnLabel.textContent = 'Claveles';
+      } else {
+        bloomBtnIcon.textContent = '🌻';
+        bloomBtnLabel.textContent = 'Girasoles';
+      }
+    }
+    if (bloomMoreBtn) {
+      const flowerName = newTheme === 'orchid' ? 'orquídeas' : (newTheme === 'rose' ? 'rosas' : (newTheme === 'carnation' ? 'claveles' : 'girasoles'));
+      bloomMoreBtn.title = `Brotar más ${flowerName}`;
+    }
+
     // 3. Actualizar centro del vinilo flotante de música
     if (playerVinyl) {
       const center = playerVinyl.querySelector('.vinyl-center');
@@ -2101,12 +2124,12 @@
     gameCtx.ellipse(170, 370, 190, 42, 0, 0, Math.PI * 2);
     gameCtx.fill();
 
-    // 2. Mover a Winnie the Pooh con inercia suave
-    poohX += (poohTargetX - poohX) * 0.22;
+    // 2. Mover a Winnie the Pooh con inercia ultra-ágil y reactiva
+    poohX += (poohTargetX - poohX) * 0.55;
 
-    // 3. Generar nuevos elementos según la fase / puntuación
+    // 3. Generar nuevos elementos según la fase / puntuación (ritmo acelerado y dinámico)
     spawnCounter++;
-    const spawnRate = gameScore >= 2000 ? 25 : (gameScore >= 1500 ? 28 : (gameScore >= 500 ? 32 : 36));
+    const spawnRate = gameScore >= 2000 ? 15 : (gameScore >= 1500 ? 18 : (gameScore >= 500 ? 22 : 25));
 
     if (spawnCounter % spawnRate === 0) {
       const rand = Math.random();
@@ -2170,13 +2193,13 @@
       gameItems.push({
         x: Math.random() * 280 + 30,
         y: -20,
-        vy: Math.random() * 1.4 + (gameScore >= 1500 ? 2.9 : (gameScore >= 500 ? 2.6 : 2.2)),
+        vy: Math.random() * 1.8 + (gameScore >= 2000 ? 5.2 : (gameScore >= 1500 ? 4.6 : (gameScore >= 500 ? 4.0 : 3.5))),
         type: type,
         symbol: symbol,
         points: points,
         color: color,
         rot: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.08
+        rotSpeed: (Math.random() - 0.5) * 0.10
       });
     }
 
@@ -2200,12 +2223,12 @@
         }
       }
 
-      // Dibujar ítem
+      // Dibujar ítem (optimizado en rendimiento gráfico para móviles y escritorio)
       gameCtx.save();
       gameCtx.translate(item.x, item.y);
       gameCtx.rotate(item.rot);
       gameCtx.shadowColor = item.color;
-      gameCtx.shadowBlur = (item.type === 'crown' || item.type === 'orchid' || item.type === 'sapphire') ? 14 : 8;
+      gameCtx.shadowBlur = (item.type === 'crown' || item.type === 'orchid' || item.type === 'sapphire') ? 8 : 3;
       gameCtx.font = item.type === 'crown' ? '28px sans-serif' : '23px sans-serif';
       gameCtx.textAlign = 'center';
       gameCtx.textBaseline = 'middle';
@@ -2215,11 +2238,11 @@
       // Detección de captura con Pooh (y ~325, radio 42px)
       const dist = Math.hypot(item.x - poohX, item.y - 325);
       if (dist < 42 && item.y >= 300 && item.y <= 348) {
-        // Aumentar combo
+        // Aumentar combo más ágilmente para mayor recompensa
         comboStreak++;
-        if (comboStreak >= 14) comboMultiplier = 3.0;
-        else if (comboStreak >= 8) comboMultiplier = 2.0;
-        else if (comboStreak >= 4) comboMultiplier = 1.5;
+        if (comboStreak >= 10) comboMultiplier = 3.0;
+        else if (comboStreak >= 6) comboMultiplier = 2.0;
+        else if (comboStreak >= 3) comboMultiplier = 1.5;
         else comboMultiplier = 1.0;
 
         const earnedPoints = Math.round(item.points * comboMultiplier);

@@ -104,8 +104,8 @@
       </button>
 
       <button id="bloomMoreBtn" class="dock-btn" title="Brotar más girasoles">
-        <span class="dock-icon">🌻</span>
-        <span class="dock-label">Girasoles</span>
+        <span class="dock-icon" id="bloomBtnIcon">🌻</span>
+        <span class="dock-label" id="bloomBtnLabel">Girasoles</span>
       </button>
 
       <button id="showLetterBtn" class="dock-btn" title="Leer la carta">
@@ -244,8 +244,11 @@
     </div>
   </div>
 
-  <!-- Audio de fondo para la canción en MP3 -->
-  <audio id="bgAudio" src="assets/musica.mp3" loop preload="auto"></audio>
+  <!-- Audio de fondo para la canción en MP3 (soporta assets/musica.mp3 y musica.mp3) -->
+  <audio id="bgAudio" loop preload="auto">
+    <source src="assets/musica.mp3" type="audio/mpeg">
+    <source src="musica.mp3" type="audio/mpeg">
+  </audio>
 
   <script src="script.js"></script>
 </body>
